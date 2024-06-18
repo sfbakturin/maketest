@@ -61,7 +61,7 @@ jobs:
         run: apt-get update
 
       - name: Install essentials
-        run: apt-get install -y build-essential binutils binutils-dev libc++-dev libc++abi-dev make python3 wget curl zip unzip pkg-config
+        run: apt-get install -y build-essential binutils binutils-dev libc++-dev libc++abi-dev make python3 wget curl zip unzip pkg-config lsb-release software-properties-common gnupg
 
       - name: Install GCC
         if: ${{matrix.tool.cc == 'gcc'}}
