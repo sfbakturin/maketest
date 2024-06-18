@@ -68,7 +68,7 @@ jobs:
         if: ${{matrix.tool.cc == 'clang'}}
         run: |
           wget https://apt.llvm.org/llvm.sh
-          sudo bash llvm.sh ${{matrix.tool.version}}
+          sudo bash llvm.sh ${{matrix.tool.version}} all
 
       - uses: actions/checkout@v4
 
