@@ -46,10 +46,6 @@ jobs:
             sanitizer: memory
 
     runs-on: ubuntu-latest
-
-    container:
-      image: ubuntu:latest
-      options: --privileged
     env:
       DEBIAN_FRONTEND: noninteractive
 
