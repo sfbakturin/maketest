@@ -4,7 +4,7 @@ on: push
 
 jobs:
   buildtest:
-    name: "Maketest ${{matrix.tool.name}} (buildtype=${{matrix.buildtype}}, sanitizer=${{matrix.sanitizer}})"
+    name: "Maketest ${{matrix.tool.name}} (${{matrix.buildtype.name}} configuration with ${{matrix.sanitizer.name}})"
 
     strategy:
       fail-fast: false
@@ -15,36 +15,35 @@ jobs:
           - {name: Clang 17, cc: clang, version: 17}
           - {name: Clang 16, cc: clang, version: 16}
           - {name: Clang 15, cc: clang, version: 15}
-          - {name: Clang 14, cc: clang, version: 14}
           - {name: GCC 12, cc: gcc, version: 12}
           - {name: GCC 11, cc: gcc, version: 11}
           - {name: GCC 10, cc: gcc, version: 10}
           - {name: GCC 9, cc: gcc, version: 9}
 
         buildtype:
-          - debug
-          - release
+          - {name: Debug, type: debug}
+          - {name: Release, type: release}
 
         sanitizer:
-          - none
-          - thread
-          - address
-          - leak
-          - undefined
-          - memory
+          - {name: no sanitizer, type: none}
+          - {name: ThreadSanitizer, type: thread}
+          - {name: AddressSanitizer, type: address}
+          - {name: LeakSanitizer, type: leak}
+          - {name: UndefinedBehaviorSanitizer, type: undefined}
+          - {name: MemorySanitizer, type: memory}
 
         exclude:
           # Sanitizing on release buildtype kinda strange.
-          - buildtype: release
-            sanitizer: thread
-          - buildtype: release
-            sanitizer: address
-          - buildtype: release
-            sanitizer: leak
-          - buildtype: release
-            sanitizer: undefined
-          - buildtype: release
-            sanitizer: memory
+          - buildtype: {type: release}
+            sanitizer: {type: thread}
+          - buildtype: {type: release}
+            sanitizer: {type: address}
+          - buildtype: {type: release}
+            sanitizer: {type: leak}
+          - buildtype: {type: release}
+            sanitizer: {type: undefined}
+          - buildtype: {type: release}
+            sanitizer: {type: memory}
           # There is no MemorySanitizer on GCC.
           - tool: {cc: gcc}
             sanitizer: memory
@@ -68,9 +67,9 @@ jobs:
         if: ${{matrix.tool.cc == 'clang'}}
         run: |
           wget https://apt.llvm.org/llvm.sh
-          sudo bash llvm.sh ${{matrix.tool.version}} all
+          sudo bash llvm.sh ${{matrix.tool.version}}
 
       - uses: actions/checkout@v4
 
       - name: Build and test all
-        run: CC=${{matrix.tool.cc}}-${{matrix.tool.version}} BUILDTYPE=${{matrix.buildtype}} SANITIZER=${{matrix.sanitizer}} DIRTESTS=tests make all
+        run: CC=${{matrix.tool.cc}}-${{matrix.tool.version}} BUILDTYPE=${{matrix.buildtype.type}} SANITIZER=${{matrix.sanitizer.type}} DIRTESTS=tests make all
