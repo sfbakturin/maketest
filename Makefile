@@ -17,6 +17,7 @@ LDFLAGS :=
 # Buildtype flags.
 BFLAGS :=
 
+# Setup sanitizers and build flags.
 ifeq (${BUILDTYPE},release)
 	BFLAGS += -O2
 else ifeq (${BUILDTYPE},debug)
@@ -41,14 +42,19 @@ else
 	$(error Building type is not supported)
 endif
 
-build_hello: src/hello.c
-	${CC} ${STD} ${WFLAGS} ${BFLAGS} ${SFLAGS} src/hello.c -o hello.exe ${LDFLAGS}
+# All programs.
+PROG_HELLO := hello
 
-test_hello: hello.exe
-	python3 tests/hello_test.py $(realpath hello.exe)
+# All builds.
+build_${PROG_HELLO}: src/${PROG_HELLO}.c
+	${CC} ${STD} ${WFLAGS} ${BFLAGS} ${SFLAGS} src/${PROG_HELLO}.c -o ${PROG_HELLO}.exe ${LDFLAGS}
 
-build: build_hello
+# All tests.
+test_${PROG_HELLO}: ${PROG_HELLO}.exe
+	python3 tests/${PROG_HELLO}_test.py "${realpath ${PROG_HELLO}.exe}"
 
-test: test_hello
+build: build_${PROG_HELLO}
+
+test: test_${PROG_HELLO}
 
 all: build test

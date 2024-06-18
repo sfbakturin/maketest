@@ -3,7 +3,7 @@ name: Maketest
 on: push
 
 jobs:
-  build:
+  buildtest:
     name: "Maketest (cc=${{matrix.cc}}, buildtype=${{matrix.buildtype}}, sanitizer=${{matrix.sanitizer}})"
 
     strategy:
@@ -55,8 +55,5 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Build all
-        run: CC=${{matrix.cc}} BUILDTYPE=${{matrix.buildtype}} SANITIZER=${{matrix.sanitizer}} make build
-
-      - name: Test all
-        run: CC=${{matrix.cc}} BUILDTYPE=${{matrix.buildtype}} SANITIZER=${{matrix.sanitizer}} make test
+      - name: Build and test all
+        run: CC=${{matrix.cc}} BUILDTYPE=${{matrix.buildtype}} SANITIZER=${{matrix.sanitizer}} make all
