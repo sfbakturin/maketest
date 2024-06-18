@@ -48,16 +48,22 @@ PROG_HELLO := hello
 PROG_PREFIX := prefix
 
 # All builds.
+
+## hello
 build_${PROG_HELLO}: src/${PROG_HELLO}.c
 	${CC} ${STD} ${WFLAGS} ${BFLAGS} ${SFLAGS} src/${PROG_HELLO}.c -o ${PROG_HELLO}.exe ${LDFLAGS}
 
+## prefix
 build_${PROG_PREFIX}: src/${PROG_PREFIX}.c
 	${CC} ${STD} ${WFLAGS} ${BFLAGS} ${SFLAGS} src/${PROG_PREFIX}.c -o ${PROG_PREFIX}.exe ${LDFLAGS}
 
 # All tests.
+
+## hello
 test_${PROG_HELLO}: ${PROG_HELLO}.exe
 	python3 ${DIRTESTS}/${PROG_HELLO}_test.py "${realpath ${PROG_HELLO}.exe}"
 
+## prefix
 test_${PROG_PREFIX}: ${PROG_PREFIX}.exe
 	python3 ${DIRTESTS}/${PROG_PREFIX}_test.py "${realpath ${PROG_PREFIX}.exe}"
 
