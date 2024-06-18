@@ -44,6 +44,11 @@ endif
 build_hello: hello.c
 	${CC} ${STD} ${WFLAGS} ${BFLAGS} ${SFLAGS} hello.c -o hello.exe ${LDFLAGS}
 
+test_hello: hello.exe
+	python3 tests/hello_test.py $(realpath hello.exe)
+
 build: build_hello
 
-all: build
+test: test_hello
+
+all: build test
