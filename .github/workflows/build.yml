@@ -1,0 +1,51 @@
+name: Maketest
+
+on: push
+
+jobs:
+  build:
+    name: "Maketest (cc=${{matrix.cc}}, buildtype=${{matrix.buildtype}}, sanitizer=${{matrix.sanitizer}})"
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        cc:
+          - gcc
+          - clang
+        buildtype:
+          - debug
+          - release
+        sanitizer:
+          - none
+          - thread
+          - address
+          - leak
+          - undefined
+
+        exclude:
+          - buildtype: release
+            sanitizer: thread
+          - buildtype: release
+            sanitizer: address
+          - buildtype: release
+            sanitizer: leak
+          - buildtype: release
+            sanitizer: undefined
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: ubuntu:latest
+      options: --privileged
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
+    steps:
+      - name: Install utils
+        run: apt-get install -y build-essential binutils binutils-dev libc++-dev libc++abi-dev ${{matrix.cc}} make
+
+      - uses: actions/checkout@v4
+
+      - name: Build all
+        run: CC=${{matrix.cc}} BUILDTYPE=${{matrix.buildtype}} SANITIZER=${{matrix.sanitizer}} make build
