@@ -13,9 +13,6 @@ jobs:
         tool:
           - {name: Clang 18, cc: clang, version: 18}
           - {name: Clang 17, cc: clang, version: 17}
-          - {name: Clang 16, cc: clang, version: 16}
-          - {name: Clang 15, cc: clang, version: 15}
-          - {name: Clang 14, cc: clang, version: 14}
           - {name: GCC 13, cc: gcc, version: 13}
           - {name: GCC 12, cc: gcc, version: 12}
           - {name: GCC 11, cc: gcc, version: 11}
@@ -65,7 +62,7 @@ jobs:
 
       - name: Install GCC
         if: ${{matrix.tool.cc == 'gcc'}}
-        run: apt-get install gcc-${{matrix.tool.version}}
+        run: apt-get install -y gcc-${{matrix.tool.version}}
 
       - name: Install Clang
         if: ${{matrix.tool.cc == 'clang'}}
