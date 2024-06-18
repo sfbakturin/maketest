@@ -1,6 +1,7 @@
 # CC - compiler.
 # BUILDTYPE (release/debug) - building program type.
 # SANITIZER (none/thread/undefined/address/leak) - use sanitizer with building program.
+# DIRTESTS - directory with tests.
 
 # Standard usage.
 STD := -ansi
@@ -51,7 +52,7 @@ build_${PROG_HELLO}: src/${PROG_HELLO}.c
 
 # All tests.
 test_${PROG_HELLO}: ${PROG_HELLO}.exe
-	python3 tests/${PROG_HELLO}_test.py "${realpath ${PROG_HELLO}.exe}"
+	python3 ${DIRTESTS}/${PROG_HELLO}_test.py "${realpath ${PROG_HELLO}.exe}"
 
 build: build_${PROG_HELLO}
 
