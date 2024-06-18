@@ -46,7 +46,7 @@ jobs:
             sanitizer: {type: memory}
           # There is no MemorySanitizer on GCC.
           - tool: {cc: gcc}
-            sanitizer: memory
+            sanitizer: {type: memory}
 
     runs-on: ubuntu-22.04
     env:
