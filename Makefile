@@ -46,6 +46,7 @@ endif
 # All programs.
 PROG_HELLO := hello
 PROG_PREFIX := prefix
+PROG_POSIX := simple_posix
 
 # All builds.
 
@@ -57,6 +58,10 @@ build_${PROG_HELLO}: src/${PROG_HELLO}.c
 build_${PROG_PREFIX}: src/${PROG_PREFIX}.c
 	${CC} ${STD} ${WFLAGS} ${BFLAGS} ${SFLAGS} src/${PROG_PREFIX}.c -o ${PROG_PREFIX}.exe ${LDFLAGS}
 
+## simple_posix
+build_${PROG_POSIX}: src/${PROG_POSIX}.c
+	${CC} ${STD} ${WFLAGS} ${BFLAGS} ${SFLAGS} src/${PROG_POSIX}.c -o ${PROG_POSIX}.exe ${LDFLAGS}
+
 # All tests.
 
 ## hello
@@ -67,8 +72,12 @@ test_${PROG_HELLO}: ${PROG_HELLO}.exe
 test_${PROG_PREFIX}: ${PROG_PREFIX}.exe
 	python3 ${DIRTESTS}/${PROG_PREFIX}_test.py "${realpath ${PROG_PREFIX}.exe}"
 
-build: build_${PROG_HELLO} build_${PROG_PREFIX}
+## prefix
+test_${PROG_POSIX}: ${PROG_POSIX}.exe
+	python3 ${DIRTESTS}/${PROG_POSIX}_test.py "${realpath ${PROG_POSIX}.exe}"
 
-test: test_${PROG_HELLO} test_${PROG_PREFIX}
+build: build_${PROG_HELLO} build_${PROG_PREFIX} build_${PROG_POSIX}
+
+test: test_${PROG_HELLO} test_${PROG_PREFIX} test_${PROG_POSIX}
 
 all: build test
