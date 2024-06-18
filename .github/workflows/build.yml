@@ -13,7 +13,7 @@ jobs:
         tool:
           - {name: Clang 18, cc: clang, version: 18}
           - {name: Clang 17, cc: clang, version: 17}
-          - {name: GCC 13, cc: gcc, version: 13}
+          - {name: Clang 16, cc: clang, version: 16}
           - {name: GCC 12, cc: gcc, version: 12}
           - {name: GCC 11, cc: gcc, version: 11}
 
