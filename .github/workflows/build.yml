@@ -33,6 +33,8 @@ jobs:
             sanitizer: leak
           - buildtype: release
             sanitizer: undefined
+          - buildtype: release
+            sanitizer: memory
           - cc: gcc
             sanitizer: memory
 
