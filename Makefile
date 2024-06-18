@@ -31,6 +31,8 @@ else ifeq (${BUILDTYPE},debug)
 			SFLAGS += -fsanitize=address
 		else ifeq (${SANITIZER},leak)
 			SFLAGS += -fsanitize=leak
+		else ifeq (${SANITIZER},memory)
+			SFLAGS += -fsanitize=memory
 		else
 			$(error Sanitizer type is not supported)
 		endif

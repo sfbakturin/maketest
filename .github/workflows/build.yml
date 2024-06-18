@@ -22,6 +22,7 @@ jobs:
           - address
           - leak
           - undefined
+          - memory
 
         exclude:
           - buildtype: release
@@ -32,6 +33,8 @@ jobs:
             sanitizer: leak
           - buildtype: release
             sanitizer: undefined
+          - cc: gcc
+            sanitizer: memory
 
     runs-on: ubuntu-latest
 
