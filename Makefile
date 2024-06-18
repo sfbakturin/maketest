@@ -4,7 +4,7 @@
 # DIRTESTS - directory with tests.
 
 # Standard usage.
-STD := -ansi
+STD := -std=c99
 
 # Warnings flags.
 WFLAGS := -Wall -Wextra -Wpedantic
@@ -45,17 +45,24 @@ endif
 
 # All programs.
 PROG_HELLO := hello
+PROG_PREFIX := prefix
 
 # All builds.
 build_${PROG_HELLO}: src/${PROG_HELLO}.c
 	${CC} ${STD} ${WFLAGS} ${BFLAGS} ${SFLAGS} src/${PROG_HELLO}.c -o ${PROG_HELLO}.exe ${LDFLAGS}
 
+build_${PROG_PREFIX}: src/${PROG_PREFIX}.c
+	${CC} ${STD} ${WFLAGS} ${BFLAGS} ${SFLAGS} src/${PROG_PREFIX}.c -o ${PROG_PREFIX}.exe ${LDFLAGS}
+
 # All tests.
 test_${PROG_HELLO}: ${PROG_HELLO}.exe
 	python3 ${DIRTESTS}/${PROG_HELLO}_test.py "${realpath ${PROG_HELLO}.exe}"
 
-build: build_${PROG_HELLO}
+test_${PROG_PREFIX}: ${PROG_PREFIX}.exe
+	python3 ${DIRTESTS}/${PROG_PREFIX}_test.py "${realpath ${PROG_PREFIX}.exe}"
 
-test: test_${PROG_HELLO}
+build: build_${PROG_HELLO} build_${PROG_PREFIX}
+
+test: test_${PROG_HELLO} test_${PROG_PREFIX}
 
 all: build test
