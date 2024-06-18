@@ -4,18 +4,26 @@ on: push
 
 jobs:
   buildtest:
-    name: "Maketest (cc=${{matrix.cc}}, buildtype=${{matrix.buildtype}}, sanitizer=${{matrix.sanitizer}})"
+    name: "Maketest ${{matrix.tool.name}} (buildtype=${{matrix.buildtype}}, sanitizer=${{matrix.sanitizer}})"
 
     strategy:
       fail-fast: false
 
       matrix:
-        cc:
-          - gcc
-          - clang
+        tool:
+          - {name: Clang 18, cc: clang, version: 18}
+          - {name: Clang 17, cc: clang, version: 17}
+          - {name: Clang 16, cc: clang, version: 16}
+          - {name: Clang 15, cc: clang, version: 15}
+          - {name: Clang 14, cc: clang, version: 14}
+          - {name: GCC 13, cc: gcc, version: 13}
+          - {name: GCC 12, cc: gcc, version: 12}
+          - {name: GCC 11, cc: gcc, version: 11}
+
         buildtype:
           - debug
           - release
+
         sanitizer:
           - none
           - thread
@@ -25,6 +33,7 @@ jobs:
           - memory
 
         exclude:
+          # Sanitizing on release buildtype kinda strange.
           - buildtype: release
             sanitizer: thread
           - buildtype: release
@@ -35,7 +44,8 @@ jobs:
             sanitizer: undefined
           - buildtype: release
             sanitizer: memory
-          - cc: gcc
+          # There is no MemorySanitizer on GCC.
+          - tool: {cc: gcc}
             sanitizer: memory
 
     runs-on: ubuntu-latest
@@ -50,10 +60,20 @@ jobs:
       - name: Update dependencies
         run: apt-get update
 
-      - name: Install utils
-        run: apt-get install -y build-essential binutils binutils-dev libc++-dev libc++abi-dev ${{matrix.cc}} make python3
+      - name: Install essentials
+        run: apt-get install -y build-essential binutils binutils-dev libc++-dev libc++abi-dev make python3
+
+      - name: Install GCC
+        if: ${{matrix.tool.cc == 'gcc'}}
+        run: apt-get install gcc-${{matrix.tool.version}}
+
+      - name: Install Clang
+        if: ${{matrix.tool.cc == 'clang'}}
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          sudo bash llvm.sh ${{matrix.tool.version}}
 
       - uses: actions/checkout@v4
 
       - name: Build and test all
-        run: CC=${{matrix.cc}} BUILDTYPE=${{matrix.buildtype}} SANITIZER=${{matrix.sanitizer}} make all
+        run: CC=${{matrix.tool.cc}}-${{matrix.tool.version}} BUILDTYPE=${{matrix.buildtype}} SANITIZER=${{matrix.sanitizer}} make all
