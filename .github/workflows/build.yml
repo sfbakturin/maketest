@@ -51,20 +51,20 @@ jobs:
 
     steps:
       - name: Update dependencies
-        run: apt-get update
+        run: sudo apt-get update
 
       - name: Install essentials
-        run: apt-get install -y build-essential binutils binutils-dev libc++-dev libc++abi-dev make python3 wget curl zip unzip pkg-config lsb-release software-properties-common gnupg
+        run: sudo apt-get install -y build-essential binutils binutils-dev libc++-dev libc++abi-dev make python3 wget curl zip unzip pkg-config lsb-release software-properties-common gnupg
 
       - name: Install GCC
         if: ${{matrix.tool.cc == 'gcc'}}
-        run: apt-get install -y gcc-${{matrix.tool.version}}
+        run: sudo apt-get install -y gcc-${{matrix.tool.version}}
 
       - name: Install Clang
         if: ${{matrix.tool.cc == 'clang'}}
         run: |
           wget https://apt.llvm.org/llvm.sh
-          bash llvm.sh ${{matrix.tool.version}}
+          sudo bash llvm.sh ${{matrix.tool.version}}
 
       - uses: actions/checkout@v4
 
